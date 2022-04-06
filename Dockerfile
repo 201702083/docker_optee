@@ -5,6 +5,10 @@ MAINTAINER Joakim Bech (joakim.bech@linaro.org)
 # packages.
 # RUN dpkg --add-architecture i386
 
+# Solution : Error when bootstrapping CMake: Problem while running initial CMake
+ENV CC=path_of_gcc/gcc-version
+ENV CXX=path_of_g++/g++-version
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/*
