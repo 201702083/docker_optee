@@ -1,43 +1,77 @@
 Dockerfile for OP-TEE
 =====================
 
-With this Dockerfile, you can quickly and easy test OP-TEE on your local
-desktop. The steps to create the Docker image is as follows:
+# Intel osx를 위한 환경설정입니다.
+
+### Dockerfile 사용하여 직접 빌드 (권장)
+
+해당 레포지토리를 클론 & 이동 후 Dockerfile을 이용해 optee 로 이미지를 만들어주세요.
+약 30분의 시간이 소요됩니다.
 
 ```bash
 $ git clone <this_repository>
 $ cd <this_repository>
 $ docker build -t optee .
 ```
-It will take ~30 minutes or so to download everything, this is highly dependant
-on the speed to your ISP. Note that when repo are synching, it looks like
-nothing happens, but indeed it does, so just relax and let it work until done.
+빌드한 optee 이미지로 container를 가동합니다.
+normal world와 secure world의 terminal을 x11 display로 보기위해 Display 옵션과 .X11-unix 볼륨을 마운트합니다. <br><br>
+**XQuartz가 없다면**
+```bash
+$ ./init.sh
+```
+을 통해 XQuartz 설치 및 실행을 합니다.<br>
 
-When all is done, you'll have a Docker image based on Ubuntu containing OP-TEE
-with all source code and toolchains necessary to build and test it out. Since
-the test spawns new `xterm` windows, we need to provide some extra parameters
-when running the Docker container. To run it, simply type:
+이제 아래 쉘 스크립트 혹은 docker cli를 이용해 optee 컨테이너를 생성합니다.
+```bash
+$ ./intel-os-run.sh
+```
+```bash
+$ docker run -ti \
+	-e DISPLAY -e XAUTHORITY=/.Xauthority \
+	--net host \
+	-v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.Xauthority:/.Xauthority \
+	optee
+```
+성공적으로 실행되었다면
+```bash
+$ make run
+```
+을 통해 optee 스크립트를 빌드합니다.
+<br>이 과정에서 약 30 ~ 60분 정도 소요되었습니다.
+<br>build후 XQuartz에 2개의 새로운 터미널 창 normal world, secure world가 생성되었다면 성공입니다.
+
+### 빌드된 이미지 사용
+해당 레포지토리를 클론 & 이동 후 Dockerfile을 이용해 optee 로 이미지를 만들어주세요.
+약 30분의 시간이 소요됩니다.
 
 ```bash
-$ docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix optee
+$ git clone <this_repository>
+$ cd <this_repository>
+$ docker build -t optee .
 ```
+빌드한 optee 이미지로 container를 가동합니다.
+normal world와 secure world의 terminal을 x11 display로 보기위해 Display 옵션과 .X11-unix 볼륨을 마운트합니다. <br><br>
+**XQuartz가 없다면**
+```bash
+$ ./init.sh
+```
+을 통해 XQuartz 설치 및 실행을 합니다.<br>
 
-In case it still doesn't work, you can grant X11 access to anyone by running `$
-xhost +`, however, be **really** careful when doing so since, you basically open
-up to open any X11 window on you machine.
-
-If you detach from that container and later on need to attach to it again, you
-will need to type:
+이제 아래 쉘 스크립트를 사용해 optee-v1 image를 pull하여 컨테이너를 생성합니다.<br>
+약 9GB의 이미지이므로 pull 과정이 오래 걸릴 수 있습니다.
+```bash
+$ ./intel-os-run-with-builtImage.sh
+```
+성공적으로 생성되었다면
 
 ```bash
-# First find the name of the container, "silly_bhaskara" in my case.
-$ docker ps -a
-CONTAINER ID        IMAGE               COMMAND             CREATED STATUS                      PORTS               NAMES
-552fbaee5d73        optee               "/bin/bash"         4 hours ago                                             silly_bhaskara
-
-# If not already running, you need to start the container.
-$ docker start silly_bhaskara
-
-# Finally re-attach to the running container
-$ docker attach silly_bhaskara
+$ make run
 ```
+optee를 실행합니다.
+
+
+## Trouble shooting
+> ---
+> ### c++: fatal error: Killed signal terminated program cc1plus
+> - memory 부족 문제, 빌드한 내용은 유지되므로 계속해서 빌드 시도를 하면 됩니다.
+>   - 0 ~ 30% build -> failed.. -> 30% ~ 60% -> failed .. -> .. -> build success !
