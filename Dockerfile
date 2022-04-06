@@ -5,6 +5,10 @@ MAINTAINER Joakim Bech (joakim.bech@linaro.org)
 # packages.
 # RUN dpkg --add-architecture i386
 
+# Solution : Error when bootstrapping CMake: Problem while running initial CMake
+ENV CC=path_of_gcc/gcc-version
+ENV CXX=path_of_g++/g++-version
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y --no-install-recommends tzdata \
     && rm -rf /var/lib/apt/lists/*
@@ -80,6 +84,6 @@ RUN sh -c "echo y | /bin/repo init -u https://github.com/OP-TEE/manifest.git"
 RUN /bin/repo sync -j3
 
 WORKDIR /home/optee/qemu-optee/build
-RUN make toolchains -j3
+RUN make toolchains -j1 --fail-fast
 
 #RUN make -j4 all run
