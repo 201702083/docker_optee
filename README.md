@@ -17,10 +17,9 @@ $ git clone <this_repository>
 $ cd <this_repository>
 $ docker build -t optee .
 ```
-빌드한 optee 이미지로 container를 가동합니다.
-normal world와 secure world의 terminal을 x11 display로 보기위해 Display 옵션과 .X11-unix 볼륨을 마운트합니다. <br><br>
-
-이제 아래 쉘 스크립트 혹은 docker cli를 이용해 optee 컨테이너를 생성합니다.
+쉘 스크립트 혹은 docker cli를 이용해 optee 컨테이너를 생성합니다.
+ - 빌드한 optee 이미지로 container를 가동합니다.
+ - normal world와 secure world의 terminal을 x11 display로 보기위해 Display 옵션과 .X11-unix 볼륨을 마운트합니다.
 ```bash
 $ ./intel-os-run.sh
 ```
