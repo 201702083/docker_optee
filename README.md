@@ -35,7 +35,7 @@ $ docker run -ti \
 ```bash
 $ make run
 ```
-이 과정에서 약 30 ~ 60분 정도 소요되었습니다.
+약 4GB 빌드를 진행하므로 약 30 ~ 60분 정도 소요되었습니다.
 <br>build후 XQuartz에 2개의 새로운 터미널 창 normal world, secure world가 생성되었다면 성공입니다.<br><br>
 
 **주의**
