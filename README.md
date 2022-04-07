@@ -1,7 +1,8 @@
 Dockerfile for OP-TEE
 =====================
 
-# Intel osx를 위한 환경설정입니다.
+# Intel osx를 위한 OPTEE 설치입니다.
+다른 환경이라면 https://github.com/jbech-linaro/docker_optee 을 따라 진행해주세요.
 ### XQuartz가 없다면 아래 쉘을 통해 XQuartz 설치 및 실행을 합니다
 ```bash
 $ ./init.sh
