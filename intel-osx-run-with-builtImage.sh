@@ -7,4 +7,4 @@ docker run -ti \
 	--net host \
 	-v /tmp/.X11-unix:/tmp/.X11-unix \
 	-v ~/.Xauthority:/.Xauthority \
-	optee-v1
+	chsjjjang/optee-v1:1.0
